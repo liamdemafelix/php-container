@@ -1,0 +1,58 @@
+version: "3.7"
+services:
+  # This is the main container of your app.
+  # Build this first, more information can be found
+  # in the Dockerfile.
+  app:
+    build:
+      args:
+        # The username of your non-privileged user. Only change if you know what you're doing.
+        user: app
+        # The uid of your non-privileged user. Only change if you know what you're doing.
+        uid: 1000
+      # Do not edit the 'context' and 'dockerfile' sections unless you know what you're doing.
+      context: ./
+      dockerfile: Dockerfile
+    # Change this to whatever your project name is
+    image: app
+    # Change this to whatever your project's main container should be named
+    container_name: app-main
+    # Do not edit anything below this line unless you know what you're doing
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    restart: unless-stopped
+
+  # You can comment-out this entire section
+  # if you don't need a database.
+  db:
+    # You can change the mysql version here or switch to a different engine
+    image: mysql:5.7
+    # Change this to whatever your project's database container should be named
+    container_name: app-db
+    # The following environment variables & volumes may be changed depending on what your DB image specifies
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_PASSWORD: changeme
+      MYSQL_USER: app
+    # The ./database mountpoint could also be a volume
+    # This is just so we can back it up easily. This has already
+    # been included in the default .gitignore.
+    volumes:
+      - ./config/mysql:/docker-entrypoint-initdb.d
+      - ./database:/var/lib/mysql
+    restart: unless-stopped
+
+  # The following section should be good out of the box.
+  # This is the web server that connects to the PHP-FPM container
+  # defined in the 'app' section of this docker-compose.yml file.
+  nginx:
+    image: nginx:1.20-alpine
+    container_name: app-nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./config/nginx:/etc/nginx/conf.d
+    restart: unless-stopped
