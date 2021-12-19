@@ -1,27 +1,41 @@
 version: "3.7"
 services:
   # This is the main container of your app.
-  # Build this first, more information can be found
-  # in the Dockerfile.
+  # This fetches the latest pre-built version of the Dockerfile.
+  # If you customized the Dockerfile in this container, you should run a build locally.
+  # See below for more information.
+
+  # If you didn't customize the Dockerfile, use the following section to fetch the latest
+  # pre-built version of this container.
   app:
-    build:
-      args:
-        # The username of your non-privileged user. Only change if you know what you're doing.
-        user: app
-        # The uid of your non-privileged user. Only change if you know what you're doing.
-        uid: 1000
-      # Do not edit the 'context' and 'dockerfile' sections unless you know what you're doing.
-      context: ./
-      dockerfile: Dockerfile
-    # Change this to whatever your project name is
-    image: app
-    # Change this to whatever your project's main container should be named
+    image: liamdemafelix/php-container:latest
     container_name: app-main
-    # Do not edit anything below this line unless you know what you're doing
     working_dir: /var/www/
     volumes:
-      - ./:/var/www
+      - ./www:/var/www/
     restart: unless-stopped
+
+  # If you customized the Dockerfile, uncomment the following section and run docker-compose build app
+  # before running docker-compose up -d.
+#  app:
+#    build:
+#      args:
+#        # The username of your non-privileged user. Only change if you know what you're doing.
+#        user: app
+#        # The uid of your non-privileged user. Only change if you know what you're doing.
+#        uid: 1000
+#      # Do not edit the 'context' and 'dockerfile' sections unless you know what you're doing.
+#      context: ./
+#      dockerfile: Dockerfile
+#    # Change this to whatever your project name is
+#    image: app
+#    # Change this to whatever your project's main container should be named
+#    container_name: app-main
+#    # Do not edit anything below this line unless you know what you're doing
+#    working_dir: /var/www/
+#    volumes:
+#      - ./www:/var/www
+#    restart: unless-stopped
 
   # You can comment-out this entire section
   # if you don't need a database.
@@ -53,6 +67,6 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./:/var/www
+      - ./www:/var/www
       - ./config/nginx:/etc/nginx/conf.d
     restart: unless-stopped
