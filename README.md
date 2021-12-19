@@ -36,6 +36,14 @@ For instance, to run a Laravel migration:
 docker-compose exec app php artisan migrate
 ```
 
+## Running composer
+
+Composer is available on the main app's container:
+
+```
+docker-compose exec app composer -V
+```
+
 ## Customizing the Dockerfile
 
 By default, this downloads a pre-built version of the Dockerfile triggered by GitHub Actions to the Docker Hub CI whenever a new tag is published.
