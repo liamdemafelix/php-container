@@ -53,7 +53,8 @@ RUN adduser --disabled-password --gecos '' app
 RUN adduser app sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN mkdir -p /home/$user/.composer && \
-    chown -R $user:$user /home/$user
+    chown -R $user:$user /home/$user && \
+    chown -R $user:$user /var/www
 
 # Change default workdir
 WORKDIR /var/www
