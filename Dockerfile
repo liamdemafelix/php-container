@@ -24,7 +24,11 @@ RUN apt-get update && apt-get install -y \
     libc-client-dev \
     libkrb5-dev \
     libpq-dev \
-    wkhtmltopdf
+    xfonts-75dpi
+    
+# Install wkhtmltopdf (qt-patched)
+RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb -O /tmp/wkhtmltopdf.deb
+RUN dpkg -i /tmp/wkhtmltopdf.deb
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
